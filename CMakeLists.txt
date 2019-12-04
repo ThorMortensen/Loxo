@@ -10,9 +10,12 @@ file(GLOB allFiles
   "test/*.cpp"
   )
 
-# Create the executable
-add_executable(${PROJECT_NAME}.out ${allFiles})
-add_library(${PROJECT_NAME} ${allFiles})
-target_include_directories(${PROJECT_NAME}.out PRIVATE "include")
-target_link_libraries(${PROJECT_NAME}.out stdc++fs)
+# -------- Create the executable --------
+#add_executable(${PROJECT_NAME}.out ${allFiles})
+#target_include_directories(${PROJECT_NAME}.out PRIVATE "include")
+#target_link_libraries(${PROJECT_NAME}.out stdc++fs)
 
+# ---------- Create the library ----------
+add_library(${PROJECT_NAME} ${allFiles})
+target_include_directories(${PROJECT_NAME} PRIVATE "include")
+target_link_libraries(${PROJECT_NAME} stdc++fs)

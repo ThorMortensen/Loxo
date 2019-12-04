@@ -61,7 +61,7 @@ private:
 
   State state = State::SEARCHING;
 
-  std::string fileName;
+  std::string fName;
   std::string folder;
   std::string absPath;
   std::list<mhist> history;

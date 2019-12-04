@@ -36,7 +36,7 @@ namespace fs = boost::filesystem;
 
 namespace loxo {
 
-Recollection::Recollection(const std::string &fileName) : fileName(fileName) {
+Recollection::Recollection(const std::string &fileName) : fName(fileName) {
   std::string home(getenv("HOME"));
   folder = home + "/.loxo-history";
   absPath = folder + "/" + fileName;
@@ -228,7 +228,7 @@ void Recollection::dbgPrintContent() {
 }
 
 void Recollection::dbgPrintAttr() {
-  std::cout << "fileName: " << fileName << std::endl;
+  std::cout << "fName: " << fName << std::endl;
   std::cout << "folder: " << folder << std::endl;
   std::cout << "absPath: " << absPath << std::endl;
 }
