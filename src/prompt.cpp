@@ -19,6 +19,7 @@ Prompt::Prompt() : recall("") {}
 
 void Prompt::test() { recall.test(); }
 
+
 void Prompt::moveCursor(keyCode direction, std::string &inputStr,
                         const std::string_view &suggestion) {
 

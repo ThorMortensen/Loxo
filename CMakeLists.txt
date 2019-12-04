@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 file(GLOB allFiles
   "include/*.h"
   "src/*.cpp"
-  "test/*.cpp"
+#  "test/*.cpp"
   )
 
 # -------- Create the executable --------
@@ -17,5 +17,5 @@ file(GLOB allFiles
 
 # ---------- Create the library ----------
 add_library(${PROJECT_NAME} ${allFiles})
-target_include_directories(${PROJECT_NAME} PRIVATE "include")
+target_include_directories(${PROJECT_NAME} PUBLIC "include")
 target_link_libraries(${PROJECT_NAME} stdc++fs)
