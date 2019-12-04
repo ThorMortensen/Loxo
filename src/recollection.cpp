@@ -1,11 +1,21 @@
+/**
+ * @file recollection.cpp
+ * @author Thor Mortensen (thor.mortensen@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2019-08-16
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #include <algorithm>
 #include <cstdlib> /* getenv */
 #include <fstream>
 #include <iostream>
 #include <sys/stat.h>
 
-#include "DebugPrinter.hpp"
-#include "Recollection.hpp"
+#include "dbgPrinter.hpp"
+#include "recollection.hpp"
 
 // ============ Fix for filesystem include ==============
 #ifndef __has_include
@@ -24,11 +34,11 @@ namespace fs = boost::filesystem;
 #endif
 // =======================================================
 
-namespace Manduca {
+namespace loxo {
 
 Recollection::Recollection(const std::string &fileName) : fileName(fileName) {
   std::string home(getenv("HOME"));
-  folder = home + "/.manduca-history";
+  folder = home + "/.loxo-history";
   absPath = folder + "/" + fileName;
 }
 
@@ -236,4 +246,4 @@ void Recollection::loadDbgPrint() {
   dbgPrintIsLoaded = true;
 }
 
-} // namespace Manduca
+} // namespace loxo

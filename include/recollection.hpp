@@ -1,3 +1,13 @@
+/**
+ * @file recollection.hpp
+ * @author Thor Mortensen (thor.mortensen@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2019-08-16
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #pragma once
 
 #include <deque>
@@ -8,7 +18,7 @@
 
 
 
-namespace Manduca {
+namespace loxo {
 class Recollection {
 public:
   Recollection(const std::string &fileName);
@@ -70,4 +80,4 @@ private:
   std::vector<std::string> dbgPrintVector;
   void loadDbgPrint();
 };
-} // namespace Manduca
+} // namespace loxo

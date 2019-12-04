@@ -1,5 +1,5 @@
 /**
- * @file Color.hpp
+ * @file color.hpp
  * @author Thor Mortensen (thor.mortensen@gmail.com)
  * @brief 
  * @version 0.1
@@ -13,8 +13,8 @@
 #include <string>
 
 
-// Use mDye alias in Manduca.hpp
-namespace Manduca::Color {
+// Use lDye alias in loxo.hpp
+namespace loxo::Color {
 
 std::string white(const std::string &str);
 std::string black(const std::string &str);
@@ -45,7 +45,4 @@ std::string reverse_color(const std::string &str);
 
 std::string removeColor(const std::string &str);
 
-
-
-
-} // namespace Manduca::Color
+} // namespace loxo::Color

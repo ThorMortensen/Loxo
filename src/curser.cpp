@@ -1,5 +1,5 @@
 /**
- * @file Curser.cpp
+ * @file curser.cpp
  * @author Thor Mortensen (thor.mortensen@gmail.com)
  * @brief
  * @version 0.1
@@ -8,13 +8,14 @@
  * @copyright Copyright (c) 2019
  *
  */
-#include "Curser.hpp"
-#include "Manduca.hpp"
 #include <csignal>
 #include <iostream>
 #include <cstdio>
 
-namespace Manduca {
+#include "curser.hpp"
+#include "loxo.hpp"
+
+namespace loxo {
 
 void Curser::flush() const { std::cout.flush(); }
 
@@ -54,11 +55,11 @@ void Curser::setRawTerminal(bool isRaw) const {
   }
 }
 
-KeyCode Curser::getKeyPress() {
+keyCode Curser::getKeyPress() {
   int c = 0;
   bool readingInput = true;
-  KeyCode state = KeyCode::NOP;
-  KeyCode nextState = KeyCode::NOP;
+  keyCode state = keyCode::NOP;
+  keyCode nextState = keyCode::NOP;
 
   inputStr.clear();
 
@@ -67,9 +68,9 @@ KeyCode Curser::getKeyPress() {
   while (readingInput) {
     c = getchar();
 
-    nextState = static_cast<KeyCode>(c);
+    nextState = static_cast<keyCode>(c);
 
-    if (nextState == KeyCode::SIGINT_KEY) { // 3
+    if (nextState == keyCode::SIGINT_KEY) { // 3
       setRawTerminal(false);
       std::raise(SIGINT);
     }
@@ -77,23 +78,23 @@ KeyCode Curser::getKeyPress() {
     inputStr.push_back(c);
 
     switch (state) {
-    case KeyCode::NOP: // 0
-      if (nextState != KeyCode::FUNC_START) {
+    case keyCode::NOP: // 0
+      if (nextState != keyCode::FUNC_START) {
         readingInput = false;
       }
       state = nextState;
       break;
-    case KeyCode::FUNC_START: // 27
-      if (nextState == KeyCode::FUNC_CONF) {
+    case keyCode::FUNC_START: // 27
+      if (nextState == keyCode::FUNC_CONF) {
         state = nextState;
       } else {
-        state = KeyCode::NOP;
+        state = keyCode::NOP;
         readingInput = false;
       }
       break;
-    case KeyCode::FUNC_CONF: // 91
+    case keyCode::FUNC_CONF: // 91
       state = nextState;
-      if (nextState == KeyCode::DEL_START) {
+      if (nextState == keyCode::DEL_START) {
         state = nextState;
       } else {
         readingInput = false;
@@ -117,7 +118,7 @@ void Curser::printDbgKeyPress() const {
     char kc = getchar();
     setRawTerminal(false);
 
-    std::cout << "KeyCode [" << std::to_string(static_cast<int32_t>(kc))
+    std::cout << "keyCode [" << std::to_string(static_cast<int32_t>(kc))
               << "], Char --> " << static_cast<char>(kc) << std::endl;
     if (static_cast<char>(kc) == 'q') {
       return;
@@ -157,4 +158,4 @@ void Curser::move(const Direction_e d, int amount) const {
   }
 }
 
-} // namespace Manduca
+} // namespace loxo

@@ -1,8 +1,17 @@
-#include "Prompt.hpp"
-#include "Manduca.hpp"
+/**
+ * @file prompt.cpp
+ * @author Thor Mortensen (thor.mortensen@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2019-08-16
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #include <functional>
+#include "loxo.hpp"
 
-namespace Manduca {
+namespace loxo {
 
 Prompt::Prompt(const std::string &nameHistDB) : recall(nameHistDB) {}
 
@@ -10,7 +19,7 @@ Prompt::Prompt() : recall("") {}
 
 void Prompt::test() { recall.test(); }
 
-void Prompt::moveCursor(KeyCode direction, std::string &inputStr,
+void Prompt::moveCursor(keyCode direction, std::string &inputStr,
                         const std::string_view &suggestion) {
 
   int32_t isl = static_cast<int32_t>(inputStr.length());
@@ -20,7 +29,7 @@ void Prompt::moveCursor(KeyCode direction, std::string &inputStr,
 
   switch (cursorState) {
   case CS::APPEND:
-    if (direction == KeyCode::LEFT) {
+    if (direction == keyCode::LEFT) {
       cursorOffset++;
       cursorState = (cursorOffset == isl - 1) ? CS::PREPEND : CS::INSERT;
     } else {
@@ -30,14 +39,14 @@ void Prompt::moveCursor(KeyCode direction, std::string &inputStr,
     }
     break;
   case CS::PREPEND:
-    if (direction == KeyCode::RIGHT) {
+    if (direction == keyCode::RIGHT) {
       cursorOffset--;
       cursorState = (cursorOffset == 0) ? CS::APPEND : CS::INSERT;
     }
     break;
   case CS::INSERT:
 
-    if (direction == KeyCode::LEFT) {
+    if (direction == keyCode::LEFT) {
       cursorOffset++;
       if (cursorOffset == isl) {
         cursorState = CS::PREPEND;
@@ -59,7 +68,7 @@ std::string Prompt::ask(const std::string &question,
                         const std::string &defaultAnsw,
                         std::function<bool(const std::string &answ)> validate) {
   bool done = false;
-  KeyCode kIn = KeyCode::NOP;
+  keyCode kIn = keyCode::NOP;
   std::string suggestion = defaultAnsw;
   std::string ppStr;
   std::string inputStr;
@@ -73,17 +82,17 @@ std::string Prompt::ask(const std::string &question,
     kIn = c.getKeyPress();
 
     switch (kIn) {
-    case KeyCode::UP:
+    case keyCode::UP:
       suggestion = recall.suggestNext(inputStr);
       break;
-    case KeyCode::DOWN:
+    case keyCode::DOWN:
       suggestion = recall.suggestPrev(inputStr);
       break;
-    case KeyCode::RIGHT:
-    case KeyCode::LEFT:
+    case keyCode::RIGHT:
+    case keyCode::LEFT:
       moveCursor(kIn, inputStr, suggestion);
       break;
-    case KeyCode::ENTER:
+    case keyCode::ENTER:
       if(!defaultAnsw.empty() && inputStr.empty()){
         inputStr = defaultAnsw;
         c.clearLine();
@@ -97,15 +106,15 @@ std::string Prompt::ask(const std::string &question,
         done = true;
       }
       break;
-    case KeyCode::NOP:
+    case keyCode::NOP:
       break;
-    case KeyCode::HOME:
+    case keyCode::HOME:
       cursorOffset = inputStr.length();
       break;
-    case KeyCode::END:
+    case keyCode::END:
       cursorOffset = 0;
       break;
-    case KeyCode::DEL:
+    case keyCode::DEL:
       if (!inputStr.empty() && cursorState != CS::APPEND) {
         if (cursorState == CS::INSERT) {
           inputStr.erase(inputStr.length() - cursorOffset,
@@ -120,13 +129,13 @@ std::string Prompt::ask(const std::string &question,
         suggestion = recall.suggest(inputStr);
       }
       break;
-    case KeyCode::TAB:
+    case keyCode::TAB:
       if (suggestion.length() > 0) {
         inputStr = suggestion;
         cursorOffset = 0;
       }
       break;
-    case KeyCode::BACK_SPACE:
+    case keyCode::BACK_SPACE:
       if (!inputStr.empty() && cursorState != CS::PREPEND) {
         if (cursorState == CS::INSERT) {
           inputStr.erase(inputStr.length() - cursorOffset - 1,
@@ -167,7 +176,7 @@ void Prompt::printAskPrompt(const std::string &question, const std::string &sugg
   if (dif > 0) {
     std::string pp =
         inputStr +
-        mDye::dim(mDye::gray(suggestion.substr(inputStr.length(), dif)));
+        lDye::dim(lDye::gray(suggestion.substr(inputStr.length(), dif)));
     std::cout << question << pp;
   } else {
     dif = 0;
@@ -181,7 +190,7 @@ int32_t Prompt::choose(const std::string &question,
   int32_t optCount = static_cast<int>(options.size()) - 1;
   int32_t selection = 0;
   bool done = false;
-  KeyCode kIn = KeyCode::NOP;
+  keyCode kIn = keyCode::NOP;
 
   std::cout << question << std::endl;
   c.caretShow(false);
@@ -190,7 +199,7 @@ int32_t Prompt::choose(const std::string &question,
 
     for (int32_t i = 0; i <= optCount; i++) {
       if (i == selection) {
-        std::cout << mDye::green("‣ " + mDye::bold(options[i]));
+        std::cout << lDye::green("‣ " + lDye::bold(options[i]));
       } else {
         std::cout << "  " << options[i];
       }
@@ -202,13 +211,13 @@ int32_t Prompt::choose(const std::string &question,
     kIn = c.getKeyPress();
 
     switch (kIn) {
-    case KeyCode::UP:
+    case keyCode::UP:
       selection--;
       break;
-    case KeyCode::DOWN:
+    case keyCode::DOWN:
       selection++;
       break;
-    case KeyCode::ENTER:
+    case keyCode::ENTER:
       done = true;
       break;
     default:
@@ -246,8 +255,15 @@ std::string Prompt::ask(const std::string &question,
 std::string Prompt::ask(const std::string &question) {
   return ask(question, "");
 }
+void Prompt::store(const std::string &string) {
+  save(string);
+  store();
+}
+void Prompt::store() {
+  recall.store();
+}
 
 // void Prompt::save() { recall.save(lastInputStr); }
 // void Prompt::save(const std::string &string) { recall.save(string); }
 
-} // namespace Manduca
+} // namespace loxo

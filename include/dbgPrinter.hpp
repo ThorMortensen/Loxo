@@ -1,3 +1,13 @@
+/**
+ * @file debugPrinter.cpp
+ * @author Thor Mortensen (thor.mortensen@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2019-08-16
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #pragma once
 
 #include <iomanip>
@@ -8,9 +18,9 @@
 #include <unistd.h>
 #include <vector>
 
-#include "Color.hpp"
+#include "color.hpp"
 
-namespace Manduca {
+namespace loxo {
 
 template <typename args>
 auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
@@ -203,4 +213,4 @@ void ppVector(int32_t lines, const T &printebleVector,
   }
 }
 
-} // namespace Manduca
+} // namespace loxo

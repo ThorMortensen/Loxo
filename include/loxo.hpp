@@ -1,5 +1,5 @@
 /**
- * @file Manduca.hpp
+ * @file loxo.hpp
  * @author Thor Mortensen (thor.mortensen@gmail.com)
  * @brief 
  * @version 0.1
@@ -10,8 +10,9 @@
  */
 #pragma once 
 
-#include "Color.hpp"
-#include "Prompt.hpp"
-#include "DebugPrinter.hpp"
+#include "color.hpp"
+#include "prompt.hpp"
+#include "dbgPrinter.hpp"
 
-namespace mDye = Manduca::Color;
+namespace lDye = loxo::Color;
+namespace lxo = loxo;

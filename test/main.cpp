@@ -3,16 +3,16 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include "Curser.hpp"
-#include "Manduca.hpp"
-#include "Recollection.hpp"
+#include "curser.hpp"
+#include "loxo.hpp"
+#include "recollection.hpp"
 
 void testCurserMovement() {
-  Manduca::Curser c;
+  loxo::Curser c;
   std::cout << "hello world";
   c.clearLine();
   std::cout << "987654321";
-  c.move(Manduca::Curser::Direction_e::LEFT, 6);
+  c.move(loxo::Curser::Direction_e::LEFT, 6);
   std::string foo;
   std::cin >> foo;
 
@@ -38,7 +38,7 @@ void testCurserMovement() {
 
 void testPromptChoose() {
   std::vector<std::string> opt = {"one", "two", "three", "four"};
-  Manduca::Prompt prompt;
+  loxo::Prompt prompt;
 
   int32_t answ = prompt.choose("Choose one:", opt);
 
@@ -47,7 +47,7 @@ void testPromptChoose() {
 }
 
 void keyCodeDbg() {
-  Manduca::Curser c;
+  loxo::Curser c;
   c.printDbgKeyPress();
 }
 
@@ -61,19 +61,19 @@ void stringTests() {
 }
 
 void recollectionTests() {
-  Manduca::Recollection r("manduca-10000-test-sorted");
+  loxo::Recollection r("loxo-10000-test-sorted");
   r.test();
 }
 
 void testPromptAsk() {
-  //    Manduca::Prompt p("cppManducaTest");
-  Manduca::Prompt p("manduca-10000-test-sorted");
+  //    loxo::Prompt p("cpploxoTest");
+  loxo::Prompt p("loxo-10000-test-sorted");
 
   while (true) {
     auto a = p.ask("Enter something ~> ", "foo is best!",
                    [](const std::string &str) {
       if(str != "ok"){
-        std::cout << mDye::red("\nWrong input please try again!") << '\n';
+        std::cout << lDye::red("\nWrong input please try again!") << '\n';
         return false;
       }
       return true;
@@ -100,7 +100,7 @@ void testDebugPrinter() {
   auto it4 = sv.begin() + 0;
   auto it5 = sv.begin() + 3;
 
-  Manduca::ppVector<std::vector<std::string>>(4, sv, it, it2, it3, it4, it5);
+  loxo::ppVector<std::vector<std::string>>(4, sv, it, it2, it3, it4, it5);
 }
 
 void signalHandler(int signum) {

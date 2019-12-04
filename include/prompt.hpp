@@ -1,13 +1,23 @@
+/**
+ * @file prompt.hpp
+ * @author Thor Mortensen (thor.mortensen@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2019-08-16
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #pragma once
 
 #include <functional>
 #include <string>
 #include <vector>
 
-#include "Curser.hpp"
-#include "Recollection.hpp"
+#include "curser.hpp"
+#include "recollection.hpp"
 
-namespace Manduca {
+namespace loxo {
 
 class Prompt {
 public:
@@ -34,6 +44,8 @@ public:
   bool disableAutoSave = false;
 
   void save(const std::string &string);
+  void store(const std::string &string);
+  void store();
 
   void test();
 
@@ -46,11 +58,11 @@ private:
 
   int32_t cursorOffset = 0;
 
-  void moveCursor(KeyCode direction, std::string &inputStr,
+  void moveCursor(keyCode direction, std::string &inputStr,
                   const std::string_view &suggestion);
   void printAskPrompt(const std::string &question,
                       const std::string &suggestion,
                       const std::string &inputStr);
 };
 
-} // namespace Manduca
+} // namespace loxo

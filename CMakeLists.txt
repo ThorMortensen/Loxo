@@ -1,4 +1,4 @@
-project(manduca)
+project(loxo)
 
 set(CMAKE_CXX_STANDARD 17)
 

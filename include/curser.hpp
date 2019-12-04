@@ -1,5 +1,5 @@
 /**
- * @file Curser.hpp
+ * @file curser.hpp
  * @author Thor Mortensen (thor.mortensen@gmail.com)
  * @brief
  * @version 0.1
@@ -14,10 +14,10 @@
 #include <iostream>
 #include <sstream>
 
-#include "Color.hpp"
-#include "KeyCodes.hpp"
+#include "color.hpp"
+#include "keyCodes.hpp"
 
-namespace Manduca {
+namespace loxo {
 
 class Curser {
 public:
@@ -48,7 +48,7 @@ public:
   void caretShow(bool isShowing) const;
   void printDbgKeyPress() const;
 
-  KeyCode getKeyPress();
+  keyCode getKeyPress();
 
   std::string inputStr;
 
@@ -81,4 +81,4 @@ private:
 
 };
 
-} // namespace Manduca
+} // namespace loxo

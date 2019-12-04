@@ -1,5 +1,5 @@
 /**
- * @file Color.cpp
+ * @file color.cpp
  * @author Thor Mortensen (thor.mortensen@gmail.com)
  * @brief 
  * @version 0.1
@@ -10,10 +10,10 @@
  */
 #include <regex>
 
-#include "Color.hpp"
+#include "color.hpp"
 
 
-namespace Manduca::Color
+namespace loxo::Color
 {
   
   std::string white(const std::string &str)          {return "\e[30m"+str+"\e[0m" ;}
@@ -62,7 +62,7 @@ namespace Manduca::Color
   }
     
 
-} // namespace Manduca
+} // namespace loxo
 
 
 

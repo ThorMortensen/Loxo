@@ -1,10 +1,20 @@
+/**
+ * @file keyCode.cpp
+ * @author Thor Mortensen (thor.mortensen@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2019-08-16
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
 #pragma once
 
-namespace Manduca {
+namespace loxo {
 
 
 
-enum class KeyCode : int {
+enum class keyCode : int {
   NOP,
   FUNC_START = 27,
   FUNC_CONF = 91,
@@ -22,4 +32,4 @@ enum class KeyCode : int {
   SIGINT_KEY = 3,
 };
 
-} // namespace Manduca
+} // namespace loxo

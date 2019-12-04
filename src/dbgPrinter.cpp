@@ -1,8 +1,0 @@
-
-namespace Manduca {
-
-
-
-
-
-} // namespace Manduca
