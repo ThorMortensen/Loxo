@@ -42,6 +42,7 @@ public:
                   std::function<bool(const std::string &answ)> validate);
 
   bool disableAutoSave = false;
+  bool useLastAsDefault = true;
 
   void save(const std::string &string);
   void store(const std::string &string);

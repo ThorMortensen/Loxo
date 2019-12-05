@@ -77,6 +77,10 @@ std::string Prompt::ask(const std::string &question,
   recall.load();
   //  recall.dbgPrintAttr();
 
+  if(useLastAsDefault){
+    suggestion = recall.suggestNext(inputStr);
+  }
+
   printAskPrompt(question, suggestion, inputStr);
 
   while (!done) {
