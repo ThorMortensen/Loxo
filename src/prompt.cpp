@@ -24,9 +24,9 @@ void Prompt::moveCursor(keyCode direction, std::string &inputStr,
                         const std::string_view &suggestion) {
 
   int32_t isl = static_cast<int32_t>(inputStr.length());
-  if (isl == 0) {
-    return;
-  }
+//  if (isl == 0) {
+//    return;
+//  }
 
   switch (cursorState) {
   case CS::APPEND:
@@ -95,6 +95,7 @@ std::string Prompt::ask(const std::string &question,
       break;
     case keyCode::RIGHT:
     case keyCode::LEFT:
+      DBP(suggestion);
       moveCursor(kIn, inputStr, suggestion);
       break;
     case keyCode::ENTER:

@@ -7,6 +7,8 @@
 #include "loxo.hpp"
 #include "recollection.hpp"
 
+using namespace loxo;
+
 void testCurserMovement() {
   loxo::Curser c;
   std::cout << "hello world";
@@ -67,19 +69,25 @@ void recollectionTests() {
 
 void testPromptAsk() {
   //    loxo::Prompt p("cpploxoTest");
-  loxo::Prompt p("loxo-10000-test-sorted");
+  loxo::Prompt p("cppDojoTest");
 
   while (true) {
-    auto a = p.ask("Enter something ~> ", "foo is best!",
-                   [](const std::string &str) {
-      if(str != "ok"){
-        std::cout << lDye::red("\nWrong input please try again!") << '\n';
-        return false;
-      }
-      return true;
-    });
+    //    auto a = p.ask("Enter something ~> ", "foo is best!",
+    //                   [](const std::string &str) {
+    //      if(str != "ok"){
+    //        std::cout << lDye::red("\nWrong input please try again!") << '\n';
+    //        return false;
+    //      }
+    //      return true;
+    //    });
+    auto a = p.ask("Enter something ~> ");
+    std::cout << "You entered --> " << a;
+    NL
     std::cout << "Done!";
-    NL if (a == "q") { break; }
+    NL;
+    if (a == "q") {
+      break;
+    }
   }
 }
 
