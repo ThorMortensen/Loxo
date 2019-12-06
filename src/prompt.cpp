@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2019
  *
  */
-#include <functional>
 #include "loxo.hpp"
+#include <functional>
 
 namespace loxo {
 
@@ -19,20 +19,22 @@ Prompt::Prompt() : recall("") {}
 
 void Prompt::test() { recall.test(); }
 
-
 void Prompt::moveCursor(keyCode direction, std::string &inputStr,
                         const std::string_view &suggestion) {
 
   int32_t isl = static_cast<int32_t>(inputStr.length());
-//  if (isl == 0) {
-//    return;
-//  }
+  if (isl == 0) {
+    cursorState = CS::APPEND;
+  }
 
   switch (cursorState) {
   case CS::APPEND:
     if (direction == keyCode::LEFT) {
+      if (isl == 0) {
+        return;
+      }
       cursorOffset++;
-      cursorState = (cursorOffset == isl - 1) ? CS::PREPEND : CS::INSERT;
+      cursorState = (cursorOffset == isl) ? CS::PREPEND : CS::INSERT;
     } else {
       if (suggestion.length() > inputStr.length()) {
         inputStr.push_back(suggestion.at(isl));
@@ -63,6 +65,7 @@ void Prompt::moveCursor(keyCode direction, std::string &inputStr,
     DEFAULT_ERR_MSG
     break;
   }
+  NL DBP(static_cast<int>(cursorState)) DBP(isl) DBP(cursorOffset)
 }
 
 std::string Prompt::ask(const std::string &question,
@@ -73,12 +76,13 @@ std::string Prompt::ask(const std::string &question,
   std::string suggestion = defaultAnsw;
   std::string ppStr;
   std::string inputStr;
+  cursorOffset = 0;
 
   recall.load();
   //  recall.dbgPrintAttr();
 
-  if(useLastAsDefault){
-    suggestion = recall.suggestNext(inputStr);
+  if (useLastAsDefault) {
+    suggestion = recall.suggestNext("");
   }
 
   printAskPrompt(question, suggestion, inputStr);
@@ -95,17 +99,17 @@ std::string Prompt::ask(const std::string &question,
       break;
     case keyCode::RIGHT:
     case keyCode::LEFT:
-      DBP(suggestion);
+      //      DBP(suggestion);
       moveCursor(kIn, inputStr, suggestion);
       break;
     case keyCode::ENTER:
-      if(!defaultAnsw.empty() && inputStr.empty()){
-        inputStr = defaultAnsw;
+      if (!suggestion.empty() && inputStr.empty()) {
+        inputStr = suggestion;
         c.clearLine();
         printAskPrompt(question, suggestion, inputStr);
       }
 
-      if (disableAutoSave){
+      if (disableAutoSave) {
         done = true;
       } else if (validate(inputStr)) {
         recall.save(inputStr);
@@ -162,13 +166,11 @@ std::string Prompt::ask(const std::string &question,
       } else {
         inputStr.insert(inputStr.length() - cursorOffset, 1,
                         ch); // 1 copy of ch
+        cursorState = CS::INSERT;
       }
       suggestion = recall.suggest(inputStr);
       break;
     }
-//        NL;
-    //    recall.dbgPrintContent();
-    //    NL;
     c.clearLine();
     printAskPrompt(question, suggestion, inputStr);
   }
@@ -177,7 +179,9 @@ std::string Prompt::ask(const std::string &question,
   return inputStr;
 }
 
-void Prompt::printAskPrompt(const std::string &question, const std::string &suggestion, const std::string &inputStr){
+void Prompt::printAskPrompt(const std::string &question,
+                            const std::string &suggestion,
+                            const std::string &inputStr) {
   int32_t dif = suggestion.length() - inputStr.length();
   if (dif > 0) {
     std::string pp =
@@ -265,9 +269,7 @@ void Prompt::store(const std::string &string) {
   save(string);
   store();
 }
-void Prompt::store() {
-  recall.store();
-}
+void Prompt::store() { recall.store(); }
 
 // void Prompt::save() { recall.save(lastInputStr); }
 // void Prompt::save(const std::string &string) { recall.save(string); }

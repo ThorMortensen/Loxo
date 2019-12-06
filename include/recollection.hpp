@@ -79,5 +79,7 @@ private:
   bool dbgPrintIsLoaded = false;
   std::vector<std::string> dbgPrintVector;
   void loadDbgPrint();
+  void incrDataIt();
+  void decrDataIt();
 };
 } // namespace loxo

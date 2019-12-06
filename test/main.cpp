@@ -80,10 +80,11 @@ void testPromptAsk() {
     //      }
     //      return true;
     //    });
-    auto a = p.ask("Enter something ~> ");
-    std::cout << "You entered --> " << a;
+    auto a = p.ask("UART msg ~> ");
+    std::cout << "You msg --> " << a;
     NL
     std::cout << "Done!";
+    p.store();
     NL;
     if (a == "q") {
       break;

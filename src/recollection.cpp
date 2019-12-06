@@ -44,7 +44,7 @@ Recollection::Recollection(const std::string &fileName) : fName(fileName) {
 
 std::string Recollection::suggestNextInBounds(const std::string &suggestionSeed,
                                               bool forward) {
-  if (data.empty()){
+  if (data.empty()) {
     return "";
   }
 
@@ -54,7 +54,7 @@ std::string Recollection::suggestNextInBounds(const std::string &suggestionSeed,
 
   state = State::IN_BOUNDS;
 
-  forward ? dataIt++ : dataIt--;
+  forward ? incrDataIt() : decrDataIt();
 
   if (dataIt->first.rfind(suggestionSeed, 1) == std::string::npos) {
     if (!forward) {
@@ -77,18 +77,29 @@ std::string Recollection::suggestPrev(const std::string &suggestionSeed) {
   return suggestNextInBounds(suggestionSeed, false);
 }
 
+void Recollection::incrDataIt() {
+  histIt++;
+  if (histIt == history.cend()) {
+    histIt = history.cbegin();
+  }
+}
+
+void Recollection::decrDataIt() {
+  if (histIt == history.cbegin()) {
+    histIt = history.cend();
+  }
+  histIt--;
+}
+
 std::string Recollection::recallNext() {
-  if (data.empty()){
+  if (data.empty()) {
     return "";
   }
 
   if (state != State::HISTORY_CRAWL) {
     histIt = history.cbegin();
   } else {
-    histIt++;
-    if (histIt == history.cend()) {
-      histIt = history.cbegin();
-    }
+    incrDataIt();
   }
   dataIt = histIt->content;
   state = State::HISTORY_CRAWL;
@@ -97,17 +108,14 @@ std::string Recollection::recallNext() {
 }
 std::string Recollection::recallPrev() {
 
-  if (data.empty()){
+  if (data.empty()) {
     return "";
   }
 
   if (state != State::HISTORY_CRAWL) {
     histIt = std::prev(history.cend());
   } else {
-    if (histIt == history.cbegin()) {
-      histIt = history.cend();
-    }
-    histIt--;
+    decrDataIt();
   }
   dataIt = histIt->content;
   state = State::HISTORY_CRAWL;
@@ -217,7 +225,7 @@ void Recollection::dbgPrintContent() {
     return;
   }
 
-  if (!dbgPrintIsLoaded){
+  if (!dbgPrintIsLoaded) {
     loadDbgPrint();
   }
 
