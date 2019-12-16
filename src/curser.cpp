@@ -154,7 +154,7 @@ void Curser::move(const Direction_e d, int amount) const {
     curserAction(std::to_string(amount) + DOWN);
     break;
   default:
-    DEFAULT_ERR_MSG
+    LXO_DEFAULT_ERR_MSG
   }
 }
 

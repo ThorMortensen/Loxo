@@ -10,6 +10,10 @@ file(GLOB allFiles
   "test/*.cpp"
   )
 
+# -------- Some Settings (for ref) --------
+#set(CMAKE_VERBOSE_MAKEFILE ON)
+#add_definitions(-DISABLE_LXO_DBG_PRINT)
+
 # -------- Create the executable --------
 #add_executable(${PROJECT_NAME}.out ${allFiles})
 #target_include_directories(${PROJECT_NAME}.out PRIVATE "include")

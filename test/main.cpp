@@ -82,10 +82,10 @@ void testPromptAsk() {
     //    });
     auto a = p.ask("UART msg ~> ");
     std::cout << "You msg --> " << a;
-    NL
+    LXO_NL
     std::cout << "Done!";
     p.store();
-    NL;
+    LXO_NL;
     if (a == "q") {
       break;
     }

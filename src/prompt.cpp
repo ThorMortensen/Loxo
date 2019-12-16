@@ -62,10 +62,10 @@ void Prompt::moveCursor(keyCode direction, std::string &inputStr,
     }
     break;
   default:
-    DEFAULT_ERR_MSG
+    LXO_DEFAULT_ERR_MSG
     break;
   }
-  NL DBP(static_cast<int>(cursorState)) DBP(isl) DBP(cursorOffset)
+  LXO_NL DBP(static_cast<int>(cursorState)) DBP(isl) DBP(cursorOffset)
 }
 
 std::string Prompt::ask(const std::string &question,
@@ -256,7 +256,7 @@ void Prompt::save(const std::string &string) {
 std::string Prompt::ask(const std::string &question,
                         const std::string &defaultAnsw) {
   return ask(question, defaultAnsw,
-             ([](const std::string &str) { return true; }));
+             ([](const std::string &str) { (void) str; return true; }));
 }
 std::string Prompt::ask(const std::string &question,
                         std::function<bool(const std::string &answ)> validate) {

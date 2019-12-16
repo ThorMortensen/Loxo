@@ -22,7 +22,7 @@
 
 namespace loxo {
 
-#ifndef NDEBUG
+#ifndef /*D*/ ISABLE_LXO_DBG_PRINT
 template <class T> struct is_c_str : std::integral_constant<bool, false> {};
 
 template <> struct is_c_str<char *> : std::integral_constant<bool, true> {};
@@ -37,15 +37,15 @@ struct is_string<std::basic_string<T, Traits, Alloc>> {
   static const bool value = true;
 };
 
-#define NL std::cout << '\n';
+#define LXO_NL std::cout << '\n';
 #define MARKER                                                                 \
   std::cout << "\n\n"                                                          \
             << __FUNCTION__ << "(" << __LINE__ << ") "                         \
             << "@@@@@@!!!MARKER!!!--------!!!MARKER!!!@@@@@@\n\n";
 
-
 template <typename args>
-constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
+constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr,
+                          args al) {
   if (is_c_str<args>::value || is_string<args>::value) {
     std::cout << fn << "(" << ln << "): " << al << "\r\n";
   } else {
@@ -58,14 +58,23 @@ constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr, args a
 #else
 #define NL
 template <typename args>
-constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
+constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr,
+                          args al) {
+  (void)fn;
+  (void)ln;
+  (void)argStr;
   return (al);
 }
 #define DBP(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
 #endif
 
-#define DEFAULT_ERR_MSG                                                        \
-  std::cerr << "Defaulted in \"" << __FUNCTION__ << '(' << __LINE__            \
+
+#define LXO_PRINT_ERRNO                                                        \
+  std::cerr << "[" <<__FILE__ << "] "<< __FUNCTION__ << "(" << __LINE__ << "): Errno("<< errno<<  ")--> " <<  strerror(errno) << "\r\n";
+
+
+#define LXO_DEFAULT_ERR_MSG                                                    \
+  std::cerr << "Defaulted in \"""[" <<__FILE__ << "] "<< __FUNCTION__ << '(' << __LINE__            \
             << ")\"!! \n";
 
 template <typename T, typename... iteratorList>
