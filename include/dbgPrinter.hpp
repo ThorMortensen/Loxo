@@ -22,43 +22,30 @@
 
 namespace loxo {
 
-//template <typename>
-//auto debugPrint(const char *fn, int32_t ln, const char *argStr,
-//                const char *al) {
-//  std::cout << fn << "(" << ln << "): " << al << "\r\n";
-//  return (argStr);
-//}
-//
-//template <typename>
-//auto debugPrint(const char *fn, int32_t ln, const char *argStr,
-//                const std::string al) {
-//  std::cout << fn << "(" << ln << "): " << al << "\r\n";
-//  return (argStr);
-//}
+#ifndef NDEBUG
+template <class T> struct is_c_str : std::integral_constant<bool, false> {};
 
-template<class T>
-struct is_c_str : std::integral_constant<bool, false> {};
+template <> struct is_c_str<char *> : std::integral_constant<bool, true> {};
 
-template<>
-struct is_c_str<char*> : std::integral_constant<bool, true> {};
+template <>
+struct is_c_str<const char *> : std::integral_constant<bool, true> {};
 
-template<>
-struct is_c_str<const char*> : std::integral_constant<bool, true> {};
-
-template <typename T>
-struct is_string
-{
-  static const bool value = false;
-};
+template <typename T> struct is_string { static const bool value = false; };
 
 template <class T, class Traits, class Alloc>
-struct is_string<std::basic_string<T, Traits, Alloc>>
-{
+struct is_string<std::basic_string<T, Traits, Alloc>> {
   static const bool value = true;
 };
 
+#define NL std::cout << '\n';
+#define MARKER                                                                 \
+  std::cout << "\n\n"                                                          \
+            << __FUNCTION__ << "(" << __LINE__ << ") "                         \
+            << "@@@@@@!!!MARKER!!!--------!!!MARKER!!!@@@@@@\n\n";
+
+
 template <typename args>
-auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
+constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
   if (is_c_str<args>::value || is_string<args>::value) {
     std::cout << fn << "(" << ln << "): " << al << "\r\n";
   } else {
@@ -67,13 +54,15 @@ auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
   }
   return (al);
 }
-
-#define NL std::cout << '\n';
-#define MARKER                                                                 \
-  std::cout << "\n\n"                                                          \
-            << __FUNCTION__ << "(" << __LINE__ << ") "                         \
-            << "@@@@@@!!!MARKER!!!--------!!!MARKER!!!@@@@@@\n\n";
 #define DBP(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
+#else
+#define NL
+template <typename args>
+constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
+  return (al);
+}
+#define DBP(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
+#endif
 
 #define DEFAULT_ERR_MSG                                                        \
   std::cerr << "Defaulted in \"" << __FUNCTION__ << '(' << __LINE__            \
