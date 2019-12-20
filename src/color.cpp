@@ -48,17 +48,7 @@ namespace loxo::Color
   
 
   std::string removeColor(const std::string &str){
-  //  std::regex ("a|e|i|o|u");
- 
-   // write the results to an output iterator
-  //  std::regex_replace(std::ostreambuf_iterator<char>(std::cout),
-                      // text.begin(), text.end(), vowel_re, "*");
- 
-   // construct a string holding the results
-      //  gsub(/(#{"\e"}\[\d*m)/n, '')
-
     return std::regex_replace(str, std::regex("(\e\\[\\d*m)"), "");
-
   }
     
 
