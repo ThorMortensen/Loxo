@@ -11,7 +11,7 @@ file(GLOB allFiles
   )
 
 # -------- Some Settings (for ref) --------
-#set(CMAKE_VERBOSE_MAKEFILE ON)
+#parseAndConsumCtrlJson(CMAKE_VERBOSE_MAKEFILE ON)
 #add_definitions(-DISABLE_LXO_DBG_PRINT)
 
 # -------- Create the executable --------
