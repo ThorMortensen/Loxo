@@ -54,7 +54,21 @@ constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr,
   }
   return (al);
 }
+
+template <typename args>
+constexpr auto debugPrintHex(const char *fn, int32_t ln, const char *argStr,
+                          args al) {
+  if (is_c_str<args>::value || is_string<args>::value) {
+    std::cout << fn << "(" << ln << "): " << al << "\r\n";
+  } else {
+    std::cout << fn << "(" << ln << "): {" << argStr << "}-->[";
+    std::cout << "0x" << std::hex << (al);
+    std::cout << std::dec << "]\r\n";
+  }
+  return (al);
+}
 #define DBP(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
+#define DBP_HEX(...) debugPrintHex(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
 #else
 #define NL
 template <typename args>
