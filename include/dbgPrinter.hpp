@@ -70,7 +70,8 @@ constexpr auto debugPrintHex(const char *fn, int32_t ln, const char *argStr,
 #define DBP(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
 #define DBP_HEX(...) debugPrintHex(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
 #else
-#define NL
+#define LXO_NL
+#define MARKER
 template <typename args>
 constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr,
                           args al) {
