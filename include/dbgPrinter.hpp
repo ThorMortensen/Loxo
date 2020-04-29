@@ -62,7 +62,7 @@ constexpr auto debugPrintHex(const char *fn, int32_t ln, const char *argStr,
     std::cout << fn << "(" << ln << "): " << al << "\r\n";
   } else {
     std::cout << fn << "(" << ln << "): {" << argStr << "}-->[";
-    std::cout << "0x" << std::hex << (al);
+    std::cout << "0x" << std::hex << static_cast<uint64_t>((al));
     std::cout << std::dec << "]\r\n";
   }
   return (al);
@@ -81,6 +81,7 @@ constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr,
   return (al);
 }
 #define DBP(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
+#define DBP_HEX(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
 #endif
 
 
