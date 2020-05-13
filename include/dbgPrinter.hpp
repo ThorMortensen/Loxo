@@ -27,37 +27,28 @@ template <class T> struct is_c_str : std::integral_constant<bool, false> {};
 
 template <> struct is_c_str<char *> : std::integral_constant<bool, true> {};
 
-template <>
-struct is_c_str<const char *> : std::integral_constant<bool, true> {};
+template <> struct is_c_str<const char *> : std::integral_constant<bool, true> {};
 
 template <typename T> struct is_string { static const bool value = false; };
 
-template <class T, class Traits, class Alloc>
-struct is_string<std::basic_string<T, Traits, Alloc>> {
-  static const bool value = true;
-};
+template <class T, class Traits, class Alloc> struct is_string<std::basic_string<T, Traits, Alloc>> { static const bool value = true; };
 
 #define LXO_NL std::cout << '\n';
-#define MARKER                                                                 \
-  std::cout << "\n\n"                                                          \
-            << __FUNCTION__ << "(" << __LINE__ << ") "                         \
+#define MARKER                                                                                                                                                                     \
+  std::cout << "\n\n"                                                                                                                                                              \
+            << __FUNCTION__ << "(" << __LINE__ << ") "                                                                                                                             \
             << "@@@@@@!!!MARKER!!!--------!!!MARKER!!!@@@@@@\n\n";
 
-template <typename args>
-constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr,
-                          args al) {
+template <typename args> constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
   if (is_c_str<args>::value || is_string<args>::value) {
     std::cout << fn << "(" << ln << "): " << al << "\r\n";
   } else {
-    std::cout << fn << "(" << ln << "): {" << argStr << "}-->[" << (al)
-              << "]\r\n";
+    std::cout << fn << "(" << ln << "): {" << argStr << "}-->[" << (al) << "]\r\n";
   }
   return (al);
 }
 
-template <typename args>
-constexpr auto debugPrintHex(const char *fn, int32_t ln, const char *argStr,
-                          args al) {
+template <typename args> constexpr auto debugPrintHex(const char *fn, int32_t ln, const char *argStr, args al) {
   if (is_c_str<args>::value || is_string<args>::value) {
     std::cout << fn << "(" << ln << "): " << al << "\r\n";
   } else {
@@ -67,14 +58,25 @@ constexpr auto debugPrintHex(const char *fn, int32_t ln, const char *argStr,
   }
   return (al);
 }
+
+template <typename args> constexpr auto debugPrintArrHex(const char *fn, int32_t ln, const char *argStr, args al, size_t size) {
+  std::cout << "=== " << fn << "(" << ln << ") START ===\r\n";
+  for (size_t i = 0; i < size; ++i) {
+    std::cout << " " << argStr << "[" << i << "] --> ["
+              << "0x" << std::hex << static_cast<uint64_t>((al[i]));
+    std::cout << std::dec << "]\r\n";
+  }
+  std::cout << "=== " << fn << "(" << ln << ") END ===\r\n";
+  return (al);
+}
+
 #define DBP(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
 #define DBP_HEX(...) debugPrintHex(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
+#define DBP_ARR(arr, size) debugPrintArrHex(__FUNCTION__, __LINE__, #arr, arr, size);
 #else
 #define LXO_NL
 #define MARKER
-template <typename args>
-constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr,
-                          args al) {
+template <typename args> constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
   (void)fn;
   (void)ln;
   (void)argStr;
@@ -82,27 +84,23 @@ constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr,
 }
 #define DBP(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
 #define DBP_HEX(...) debugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
+#define DBP_ARR(...) ddebugPrint(__FUNCTION__, __LINE__, #__VA_ARGS__, __VA_ARGS__);
 #endif
 
+#define LXO_PRINT_ERRNO std::cerr << "[" << __FILE__ << "] " << __FUNCTION__ << "(" << __LINE__ << "): Errno(" << errno << ")--> " << strerror(errno) << "\r\n";
 
-#define LXO_PRINT_ERRNO                                                        \
-  std::cerr << "[" <<__FILE__ << "] "<< __FUNCTION__ << "(" << __LINE__ << "): Errno("<< errno<<  ")--> " <<  strerror(errno) << "\r\n";
+#define LXO_DEFAULT_ERR_MSG                                                                                                                                                        \
+  std::cerr << "Defaulted in \""                                                                                                                                                   \
+               "["                                                                                                                                                                 \
+            << __FILE__ << "] " << __FUNCTION__ << '(' << __LINE__ << ")\"!! \n";
 
-
-#define LXO_DEFAULT_ERR_MSG                                                    \
-  std::cerr << "Defaulted in \"""[" <<__FILE__ << "] "<< __FUNCTION__ << '(' << __LINE__            \
-            << ")\"!! \n";
-
-template <typename T, typename... iteratorList>
-void ppVector(int32_t lines, const T &printebleVector,
-              iteratorList... iterators) {
+template <typename T, typename... iteratorList> void ppVector(int32_t lines, const T &printebleVector, iteratorList... iterators) {
 
   int32_t colWidth = 15;
   int32_t dbgColSel = 0;
   int32_t vSize = static_cast<int32_t>(printebleVector.size());
   static const std::size_t itCount = sizeof...(iterators);
-  std::string (*dbgColors[])(const std::string &str) = {
-      Color::green, Color::blue, Color::magenta, Color::cyan};
+  std::string (*dbgColors[])(const std::string &str) = {Color::green, Color::blue, Color::magenta, Color::cyan};
   struct winsize w;
 
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
@@ -165,10 +163,8 @@ void ppVector(int32_t lines, const T &printebleVector,
       ssout << std::right << "[" << std::setw(digitLength) << start + i << "] ";
 
       if ((start + i) == itPos) {
-        ssout << std::left << std::setw(colWidth - 3)
-              << printebleVector[start + i];
-        col[i] += Color::bold((*dbgColors[(dbgColSel++) % 4])(
-            "‣" + ssout.str().substr(0, colWidth - 1) + ' '));
+        ssout << std::left << std::setw(colWidth - 3) << printebleVector[start + i];
+        col[i] += Color::bold((*dbgColors[(dbgColSel++) % 4])("‣" + ssout.str().substr(0, colWidth - 1) + ' '));
       } else {
         ssout << std::left << std::setw(colWidth) << printebleVector[start + i];
         col[i] += ssout.str().substr(0, colWidth) + ' ';
