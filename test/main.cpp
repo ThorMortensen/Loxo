@@ -123,9 +123,10 @@ void signalHandlerTest() { signal(SIGINT, signalHandler); }
 
 int main(/* int argc, char const *argv[] */) {
 
+  lxo::DBP("Hello world")
   // testDebugPrinter();
 
-  testPromptAsk();
+//  testPromptAsk();
   // testCurserMovement();
 
   // std::cout << "prompt test starts..." << std::endl;

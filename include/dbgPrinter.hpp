@@ -15,6 +15,7 @@
 #include <optional>
 #include <sstream>
 #include <sys/ioctl.h>
+#include <syslog.h>
 #include <unistd.h>
 #include <vector>
 
@@ -39,12 +40,69 @@ template <class T, class Traits, class Alloc> struct is_string<std::basic_string
             << __FUNCTION__ << "(" << __LINE__ << ") "                                                                                                                             \
             << "@@@@@@!!!MARKER!!!--------!!!MARKER!!!@@@@@@\n\n";
 
+
+
+class loxoLogger{
+   enum LogPriority {
+     kLogEmerg   = LOG_EMERG,   // system is unusable
+     kLogAlert   = LOG_ALERT,   // action must be taken immediately
+     kLogCrit    = LOG_CRIT,    // critical conditions
+     kLogErr     = LOG_ERR,     // error conditions
+     kLogWarning = LOG_WARNING, // warning conditions
+     kLogNotice  = LOG_NOTICE,  // normal, but significant, condition
+     kLogInfo    = LOG_INFO,    // informational message
+     kLogDebug   = LOG_DEBUG    // debug-level message
+   };
+
+ public:
+  explicit loxoLogger(std::ostream& os = std::cout) : os_(os){}
+ private:
+
+   template<typename T> friend std::ostream& operator<<(loxoLogger&, T);
+   std::ostream& os_;
+};
+#define ENALBE_SYS_LOG
+template<typename T>
+std::ostream& operator<<(loxoLogger& log, T op) {
+#ifdef ENALBE_SYS_LOG
+  syslog(op)
+#else
+
+  log.os_ << op;
+  return log.os_;
+#endif
+
+  log.os_ << op;
+  return log.os_;
+}
+
+//template<typename T>
+//std::ostream& operator<<(loxoLogger& log, T op, int logPrio) {
+//  log.os_ << (op , logPrio);
+//  return log.os_;
+//}
+
+
+
+loxoLogger lxoLogger;
+
+//    constexpr auto loxoLogger(const char *fn, int32_t ln, const char *argStr, args al) {
+//  if (is_c_str<args>::value || is_string<args>::value) {
+//    std::clog << fn << "(" << ln << "): " << al << "\r\n";
+//  } else {
+//    std::clog << fn << "(" << ln << "): {" << argStr << "}-->[" << (al) << "]\r\n";
+//  }
+//  return (al);
+//}
+
+
 template <typename args> constexpr auto debugPrint(const char *fn, int32_t ln, const char *argStr, args al) {
   if (is_c_str<args>::value || is_string<args>::value) {
-    std::cout << fn << "(" << ln << "): " << al << "\r\n";
+    lxoLogger << fn << "(" << ln << "): " << al << "\r\n";
   } else {
-    std::cout << fn << "(" << ln << "): {" << argStr << "}-->[" << (al) << "]\r\n";
+    lxoLogger << fn << "(" << ln << "): {" << argStr << "}-->[" << (al) << "]\r\n";
   }
+
   return (al);
 }
 
